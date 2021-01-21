@@ -1,75 +1,61 @@
 import React from "react";
 import "../index.css";
-export const movie = {
-  title: "Avengers: Infinity War",
-  vote_average: 8.5,
-  image:
-    "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fblogs-images.forbes.com%2Fscottmendelson%2Ffiles%2F2018%2F04%2Fimage001.jpg",
-  overview:
-    "Avengers: Infinity War is a 2018 American superhero film based on the Marvel Comics superhero team the Avengers. "
-};
 
-const Image = (props) => {
-  return <img width="100%" src={props.src} alt={props.alt} />;
-};
-
-// export const MovieItem = (props) => {
-//   console.log(props);
-//   const {
-//     data: { title, vote_average, image }
-//   } = props;
-//   return (
-//     <div>
-//       <Image src={image} alt={title} />
-//       <p>{title}</p>
-//       <p>{vote_average}</p>
-//     </div>
-//   );
-// };
-
-// MovieItem = new React.Component()
 export class MovieItem extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      show: false,
-      like: false
+      willWatch: false
     };
   }
-  toogleOverview = () => {
-    this.setState({
-      show: !this.state.show
-    });
-  };
-  handleLike = () => {
-    this.setState({
-      like: !this.state.like
-    });
-  };
   render() {
     const {
-      data: { title, image, vote_average, overview }
+      movie,
+      removeMovie,
+      addMovieWillWatch,
+      removeMovieWillWatch
     } = this.props;
     return (
-      <div style={{ width: "250px", height: "300px" }}>
-        <Image src={image} alt={title} />
-        <p>{title}</p>
-        <p>{vote_average}</p>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <button type="button" onClick={this.toogleOverview}>
-            {this.state.show ? "Hide" : "Show"}
-          </button>
-          <button
-            type="button"
-            onClick={this.handleLike}
-            className={this.state.like ? "btn--like" : ""}
-          >
-            Like
-          </button>
+      <div className="card">
+        <img
+          className="card-img-top"
+          src={`https://image.tmdb.org/t/p/w500${
+            movie.backdrop_path || movie.poster_path
+          }`}
+          alt=""
+        />
+        <div className="card-body">
+          <h6 className="card-title">{movie.title}</h6>
+          <div className="d-flex justify-content-between align-items-center">
+            <p className="mb-0">Rating: {movie.vote_average}</p>
+            <button
+              type="button"
+              className={
+                this.state.willWatch ? "btn btn-warning" : "btn btn-success"
+              }
+              onClick={() => {
+                this.setState({
+                  willWatch: !this.state.willWatch
+                });
+                {
+                  this.state.willWatch
+                    ? removeMovieWillWatch(movie)
+                    : addMovieWillWatch(movie);
+                }
+              }}
+            >
+              {this.state.willWatch ? "Won't Watch" : "Will Watch"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={removeMovie.bind(null, movie)}
+            >
+              Delete Movie
+            </button>
+          </div>
         </div>
-
-        {this.state.show ? <p>{overview}</p> : null}
       </div>
     );
   }
